@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Semesteria Hiring Dashboard
 
-## Getting Started
+The frontend for the Semesteria Hiring Dashboard. Candidates can browse open
+positions and manage their applications. Recruiters can review applications
+and update candidate stages.
 
-First, run the development server:
+The frontend uses a separate Django REST API. The API must be running for
+sign-in and dashboard data to work.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Requirements
+
+- Node.js 20.9 or newer
+- npm (included with Node.js)
+- The Semesteria Django backend running locally or at another reachable URL
+
+Check that Node.js and npm are installed:
+
+```powershell
+node --version
+npm --version
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Install and configure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open a terminal in the frontend project directory (the directory containing
+`package.json`), then install the project dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```powershell
+npm install
+```
 
-## Learn More
+Create the local environment file from the example:
 
-To learn more about Next.js, take a look at the following resources:
+```powershell
+Copy-Item .env.example .env.local
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open `.env.local` and set `NEXT_PUBLIC_API_URL` to the Django API base URL.
+For the default local backend, use:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```dotenv
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api
+```
 
-## Deploy on Vercel
+If the backend runs at a different address or port, update this value. Keep
+the `/api` suffix. `.env.local` is a local-only file and should not be
+committed.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Start the application
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Start the Django backend first and make sure it is reachable at the URL
+configured above. Then start the frontend development server:
+
+```powershell
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser. Press
+`Ctrl+C` in the terminal to stop the development server.
+
+## Sign in
+
+Use an account created by the backend's demo-data seed command, or another
+account configured in the backend. The seeded demo accounts are:
+
+| Role | Username | Password |
+| --- | --- | --- |
+| Candidate | `candidate1` | `Candidate@123` |
+| Candidate | `candidate2` | `Candidate@456` |
+| Recruiter | `recruiter1` | `Recruiter@123` |
+| Recruiter | `recruiter2` | `Recruiter@456` |
+
+These are development demo credentials only. Do not use them in production.
+The login page also provides quick-fill buttons for `candidate1` and
+`recruiter1`.
+
+## Available commands
+
+Run these from the frontend project directory:
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the local development server |
+| `npm run lint` | Check the project with ESLint |
+| `npm test` | Run the Vitest test suite |
+| `npm run build` | Create an optimized production build |
+| `npm start` | Serve the production build (run `npm run build` first) |
+
+For a production build, configure `NEXT_PUBLIC_API_URL` for the target
+environment before running `npm run build`.
+
+## Troubleshooting
+
+- **The frontend cannot reach the API:** Check that Django is running and
+  `NEXT_PUBLIC_API_URL` points to the correct API base URL.
+- **Sign-in fails or API requests are blocked by CORS:** Configure the
+  backend's allowed CORS origins to include the frontend origin, such as
+  `http://localhost:3000`.
+- **Environment changes do not take effect:** Stop and restart `npm run dev`
+  after editing `.env.local`.
+- **Dependencies are missing or inconsistent:** Run `npm install` again from
+  the project directory.
+
+## Tech stack
+
+- Next.js 16 with the App Router
+- React 19 and TypeScript
+- Tailwind CSS 4
+- Vitest and Testing Library
